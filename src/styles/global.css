@@ -1,0 +1,65 @@
+:root {
+  --clx-bg: #0a1628;
+  --clx-surface: #1e2d45;
+  --clx-accent: #d4af37;
+  --clx-text: #ffffff;
+  --clx-text-secondary: #8b9bb4;
+  --clx-active: #3fb950;
+  --clx-at-risk: #e6a23c;
+  --clx-churned: #e5484d;
+  --clx-border: #2c3e5a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--clx-bg);
+  color: var(--clx-text);
+  font-family: 'DM Sans', sans-serif;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
+button {
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border: none;
+  border-radius: 0;
+}
+
+input,
+select,
+textarea {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--clx-bg);
+  color: var(--clx-text);
+  border: 1px solid var(--clx-border);
+  border-radius: 0;
+  padding: 0.5rem 0.75rem;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 1px solid var(--clx-accent);
+}
+
+a {
+  color: var(--clx-accent);
+}
