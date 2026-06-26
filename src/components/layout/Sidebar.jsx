@@ -18,6 +18,12 @@ const BIZ_CLIENT_ITEMS = [
   { path: '/business/b2c/preview', label: 'Client Preview', disabled: true },
 ];
 
+const BIZ_PARTNER_SELF_ITEMS = [
+  { path: '/business/b2b/my-status', label: 'My Status' },
+  { path: '/business/b2b/my-commissions', label: 'My Commissions' },
+  { path: '/business/b2b/my-alerts', label: 'My Alerts' },
+];
+
 const INTERNAL_DAILY_OPS_ITEMS = [
   { path: '/internal/eod', label: 'EOD Tracker' },
   { path: '/internal/one-thing', label: 'One Thing' },
@@ -35,7 +41,7 @@ const INTERNAL_ADMIN_ITEMS = [
   { path: '/internal/team-directory', label: 'Team Directory' },
 ];
 
-export default function Sidebar({ activePortal, onPortalChange, counts, user }) {
+export default function Sidebar({ activePortal, onPortalChange, counts, user, isAdmin, isPartner }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -56,6 +62,7 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user }) 
         open={dropdownOpen}
         onToggle={() => setDropdownOpen((v) => !v)}
         onClose={() => setDropdownOpen(false)}
+        isPartner={isPartner}
       />
 
       <div style={{ flex: 1, overflowY: 'auto' }}>
@@ -66,17 +73,21 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user }) 
               dotColor="#c8e060"
               labelColor="#7a9a30"
               label="B2B Partners"
-              items={BIZ_PARTNER_ITEMS(counts)}
+              items={isAdmin ? BIZ_PARTNER_ITEMS(counts) : BIZ_PARTNER_SELF_ITEMS}
             />
-            <div style={{ borderTop: '1px solid #1a2330' }} />
-            <NavSection
-              theme="biz"
-              dotColor="#c084fc"
-              labelColor="#8050b0"
-              label="B2C Clients"
-              tag="TBD"
-              items={BIZ_CLIENT_ITEMS}
-            />
+            {isAdmin && (
+              <>
+                <div style={{ borderTop: '1px solid #1a2330' }} />
+                <NavSection
+                  theme="biz"
+                  dotColor="#c084fc"
+                  labelColor="#8050b0"
+                  label="B2C Clients"
+                  tag="TBD"
+                  items={BIZ_CLIENT_ITEMS}
+                />
+              </>
+            )}
           </>
         )}
 

@@ -4,8 +4,16 @@ import Sidebar from './Sidebar.jsx';
 import TopBar from './TopBar.jsx';
 import PartnerDashboard from '../../pages/PartnerDashboard.jsx';
 import PlaceholderPage from '../../pages/PlaceholderPage.jsx';
+import { useUserRole } from '../../hooks/useUserRole.js';
 
 const DEFAULT_PATH = { biz: '/business/b2b/partners', internal: '/internal/eod' };
+
+const ADMIN_ONLY_B2B_PATHS = [
+  '/business/b2b/database',
+  '/business/b2b/reports',
+  '/business/b2b/calendar-health',
+  '/business/b2b/partner-preview',
+];
 
 const PAGE_LABELS = {
   '/business/b2b/partners': 'Partner Management',
@@ -14,6 +22,9 @@ const PAGE_LABELS = {
   '/business/b2b/calendar-health': 'Calendar Health',
   '/business/b2b/alerts': 'Alerts',
   '/business/b2b/partner-preview': 'Partner Preview',
+  '/business/b2b/my-status': 'My Status',
+  '/business/b2b/my-commissions': 'My Commissions',
+  '/business/b2b/my-alerts': 'My Alerts',
   '/internal/eod': 'EOD Tracker',
   '/internal/one-thing': 'One Thing',
   '/internal/time-off': 'Time Off',
@@ -27,6 +38,7 @@ const PAGE_LABELS = {
 export default function MainLayout({ user }) {
   const location = useLocation();
   const navigate = useNavigate();
+  const { isAdmin, isPartner } = useUserRole();
   const [search, setSearch] = useState('');
   const [addTrigger, setAddTrigger] = useState(0);
   const [partners, setPartners] = useState([]);
@@ -45,9 +57,23 @@ export default function MainLayout({ user }) {
     flagged: partners.filter((p) => p.flagged_for_review).length,
   };
 
+  const isBlockedForPartner =
+    isPartner && (location.pathname.startsWith('/internal') || ADMIN_ONLY_B2B_PATHS.includes(location.pathname));
+
+  if (isBlockedForPartner) {
+    return <Navigate to="/business/b2b/my-status" replace />;
+  }
+
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar activePortal={activePortal} onPortalChange={handlePortalChange} counts={counts} user={user} />
+      <Sidebar
+        activePortal={activePortal}
+        onPortalChange={handlePortalChange}
+        counts={counts}
+        user={user}
+        isAdmin={isAdmin}
+        isPartner={isPartner}
+      />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <TopBar
@@ -82,6 +108,18 @@ export default function MainLayout({ user }) {
             <Route
               path="/business/b2b/partner-preview"
               element={<PlaceholderPage title="Partner Preview" accentColor="#f0c85a" />}
+            />
+            <Route
+              path="/business/b2b/my-status"
+              element={<PlaceholderPage title="My Status" accentColor="#f0c85a" />}
+            />
+            <Route
+              path="/business/b2b/my-commissions"
+              element={<PlaceholderPage title="My Commissions" accentColor="#f0c85a" />}
+            />
+            <Route
+              path="/business/b2b/my-alerts"
+              element={<PlaceholderPage title="My Alerts" accentColor="#f0c85a" />}
             />
             <Route
               path="/business/b2c/*"

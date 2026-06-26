@@ -28,12 +28,12 @@ export const PORTALS = {
   },
 };
 
-export default function PortalDropdown({ activePortal, onSelect, open, onToggle, onClose }) {
+export default function PortalDropdown({ activePortal, onSelect, open, onToggle, onClose, isPartner }) {
   const ref = useRef(null);
   const active = PORTALS[activePortal];
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || isPartner) return;
     function handleClickOutside(e) {
       if (ref.current && !ref.current.contains(e.target)) {
         onClose();
@@ -41,7 +41,33 @@ export default function PortalDropdown({ activePortal, onSelect, open, onToggle,
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [open, onClose]);
+  }, [open, onClose, isPartner]);
+
+  if (isPartner) {
+    return (
+      <div style={{ padding: '0.75rem 0.75rem 1rem' }}>
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.65rem',
+            width: '100%',
+            background: '#0f1620',
+            border: '1px solid #1a2330',
+            padding: '0.6rem 0.7rem',
+          }}
+        >
+          <PortalMark portal={PORTALS.biz} size={30} />
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ color: PORTALS.biz.labelColor, fontSize: '0.9rem', fontWeight: 700, lineHeight: 1.2 }}>
+              CLX Business
+            </div>
+            <div style={{ color: '#5a6a80', fontSize: '0.7rem', lineHeight: 1.2 }}>{PORTALS.biz.subtitle}</div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={ref} style={{ position: 'relative', padding: '0.75rem 0.75rem 1rem' }}>
