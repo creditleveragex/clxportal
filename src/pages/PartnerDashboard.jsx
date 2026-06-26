@@ -1,16 +1,28 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePartners } from '../hooks/usePartners.js';
 import PartnerFilterBar from '../components/PartnerFilterBar.jsx';
 import PartnerTable from '../components/PartnerTable.jsx';
 import PartnerFormModal from '../components/PartnerFormModal.jsx';
 import FlagModal from '../components/FlagModal.jsx';
 
-export default function PartnerDashboard() {
+export default function PartnerDashboard({ search: externalSearch, addTrigger, onPartnersChange }) {
   const { partners, loading, error, upsertPartner, setFlag } = usePartners();
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [editingPartner, setEditingPartner] = useState(undefined);
   const [flaggingPartner, setFlaggingPartner] = useState(null);
+
+  useEffect(() => {
+    if (externalSearch !== undefined) setSearch(externalSearch);
+  }, [externalSearch]);
+
+  useEffect(() => {
+    if (addTrigger) setEditingPartner(null);
+  }, [addTrigger]);
+
+  useEffect(() => {
+    onPartnersChange?.(partners);
+  }, [partners, onPartnersChange]);
 
   const filteredPartners = useMemo(() => {
     const term = search.trim().toLowerCase();

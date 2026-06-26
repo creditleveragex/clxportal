@@ -63,3 +63,8 @@ textarea:focus {
 a {
   color: var(--clx-accent);
 }
+
+.clx-nav-item:hover {
+  background: #0f1928 !important;
+  color: #b0cce0 !important;
+}
