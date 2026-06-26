@@ -1,21 +1,35 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { usePartners } from '../hooks/usePartners.js';
 import PartnerFilterBar from '../components/PartnerFilterBar.jsx';
 import PartnerTable from '../components/PartnerTable.jsx';
 import PartnerFormModal from '../components/PartnerFormModal.jsx';
 import FlagModal from '../components/FlagModal.jsx';
 
-export default function PartnerDashboard() {
+export default function PartnerDashboard({ search: externalSearch, addTrigger, onPartnersChange }) {
   const { partners, loading, error, upsertPartner, setFlag } = usePartners();
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
   const [editingPartner, setEditingPartner] = useState(undefined);
   const [flaggingPartner, setFlaggingPartner] = useState(null);
 
+  useEffect(() => {
+    if (externalSearch !== undefined) setSearch(externalSearch);
+  }, [externalSearch]);
+
+  useEffect(() => {
+    if (addTrigger) setEditingPartner(null);
+  }, [addTrigger]);
+
+  useEffect(() => {
+    onPartnersChange?.(partners);
+  }, [partners, onPartnersChange]);
+
   const filteredPartners = useMemo(() => {
     const term = search.trim().toLowerCase();
     return partners.filter((p) => {
-      const matchesFilter = filter === 'all' || p.health_status === filter;
+      const matchesFilter =
+        filter === 'all' ||
+        (filter === 'flagged' ? p.flagged_for_review : p.health_status === filter);
       const matchesSearch =
         !term ||
         [p.business_name, p.first_name, p.last_name, p.email]
@@ -50,13 +64,7 @@ export default function PartnerDashboard() {
         <StatCard label="Flagged" value={counts.flagged} color="var(--clx-accent)" />
       </div>
 
-      <PartnerFilterBar
-        activeFilter={filter}
-        onFilterChange={setFilter}
-        search={search}
-        onSearchChange={setSearch}
-        onAddNew={() => setEditingPartner(null)}
-      />
+      <PartnerFilterBar activeFilter={filter} onFilterChange={setFilter} resultCount={filteredPartners.length} />
 
       {error && <div style={{ color: 'var(--clx-churned)', marginBottom: '1rem' }}>{error}</div>}
 
