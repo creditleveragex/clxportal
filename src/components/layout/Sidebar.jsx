@@ -4,38 +4,38 @@ import NavSection from './NavSection.jsx';
 import { supabase } from '../../supabaseClient.js';
 
 const BIZ_PARTNER_ITEMS = (counts) => [
-  { key: 'partner-management', label: 'Partner Management', badge: counts.partners },
-  { key: 'reports-analytics', label: 'Reports & Analytics' },
-  { key: 'database', label: 'Database' },
-  { key: 'calendar-health', label: 'Calendar Health' },
-  { key: 'alerts', label: 'Alerts', badge: counts.flagged, badgeColor: 'red' },
-  { key: 'partner-preview', label: 'Partner Preview' },
+  { path: '/business/b2b/partners', label: 'Partner Management', badge: counts.partners },
+  { path: '/business/b2b/reports', label: 'Reports & Analytics' },
+  { path: '/business/b2b/database', label: 'Database' },
+  { path: '/business/b2b/calendar-health', label: 'Calendar Health' },
+  { path: '/business/b2b/alerts', label: 'Alerts', badge: counts.flagged, badgeColor: 'red' },
+  { path: '/business/b2b/partner-preview', label: 'Partner Preview' },
 ];
 
 const BIZ_CLIENT_ITEMS = [
-  { key: 'client-management', label: 'Client Management', disabled: true },
-  { key: 'reports', label: 'Reports', disabled: true },
-  { key: 'client-preview', label: 'Client Preview', disabled: true },
+  { path: '/business/b2c/clients', label: 'Client Management', disabled: true },
+  { path: '/business/b2c/reports', label: 'Reports', disabled: true },
+  { path: '/business/b2c/preview', label: 'Client Preview', disabled: true },
 ];
 
 const INTERNAL_DAILY_OPS_ITEMS = [
-  { key: 'eod-tracker', label: 'EOD Tracker' },
-  { key: 'one-thing', label: 'One Thing' },
-  { key: 'time-off', label: 'Time Off' },
+  { path: '/internal/eod', label: 'EOD Tracker' },
+  { path: '/internal/one-thing', label: 'One Thing' },
+  { path: '/internal/time-off', label: 'Time Off' },
 ];
 
 const INTERNAL_COMPANY_ITEMS = [
-  { key: 'finance', label: 'Finance' },
-  { key: 'sops', label: 'SOPs' },
-  { key: 'alerts', label: 'Alerts' },
+  { path: '/internal/finance', label: 'Finance' },
+  { path: '/internal/sops', label: 'SOPs' },
+  { path: '/internal/alerts', label: 'Alerts' },
 ];
 
 const INTERNAL_ADMIN_ITEMS = [
-  { key: 'settings', label: 'Settings' },
-  { key: 'team-directory', label: 'Team Directory' },
+  { path: '/internal/settings', label: 'Settings' },
+  { path: '/internal/team-directory', label: 'Team Directory' },
 ];
 
-export default function Sidebar({ activePortal, onPortalChange, activePage, onPageChange, counts, user }) {
+export default function Sidebar({ activePortal, onPortalChange, counts, user }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
@@ -67,8 +67,6 @@ export default function Sidebar({ activePortal, onPortalChange, activePage, onPa
               labelColor="#7a9a30"
               label="B2B Partners"
               items={BIZ_PARTNER_ITEMS(counts)}
-              activePage={activePage}
-              onSelect={onPageChange}
             />
             <div style={{ borderTop: '1px solid #1a2330' }} />
             <NavSection
@@ -78,8 +76,6 @@ export default function Sidebar({ activePortal, onPortalChange, activePage, onPa
               label="B2C Clients"
               tag="TBD"
               items={BIZ_CLIENT_ITEMS}
-              activePage={activePage}
-              onSelect={onPageChange}
             />
           </>
         )}
@@ -92,8 +88,6 @@ export default function Sidebar({ activePortal, onPortalChange, activePage, onPa
               labelColor="#3a6a90"
               label="Daily Ops"
               items={INTERNAL_DAILY_OPS_ITEMS}
-              activePage={activePage}
-              onSelect={onPageChange}
             />
             <div style={{ borderTop: '1px solid #1a2330' }} />
             <NavSection
@@ -102,8 +96,6 @@ export default function Sidebar({ activePortal, onPortalChange, activePage, onPa
               labelColor="#3a6a90"
               label="Company"
               items={INTERNAL_COMPANY_ITEMS}
-              activePage={activePage}
-              onSelect={onPageChange}
             />
             <div style={{ borderTop: '1px solid #1a2330' }} />
             <NavSection
@@ -112,8 +104,6 @@ export default function Sidebar({ activePortal, onPortalChange, activePage, onPa
               labelColor="#3a6a90"
               label="Admin"
               items={INTERNAL_ADMIN_ITEMS}
-              activePage={activePage}
-              onSelect={onPageChange}
             />
           </>
         )}

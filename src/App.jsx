@@ -29,12 +29,11 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route
-        path="/"
+        path="/*"
         element={
           <RequireAuth>{(session) => <MainLayout user={userFromSession(session)} />}</RequireAuth>
         }
       />
-      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

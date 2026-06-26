@@ -1,39 +1,43 @@
 import { useState } from 'react';
+import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar.jsx';
 import TopBar from './TopBar.jsx';
 import PartnerDashboard from '../../pages/PartnerDashboard.jsx';
-import PortalPlaceholder from '../../pages/PortalPlaceholder.jsx';
+import PlaceholderPage from '../../pages/PlaceholderPage.jsx';
 
-const DEFAULT_PAGE = { biz: 'partner-management', internal: 'eod-tracker', ai: 'overview' };
+const DEFAULT_PATH = { biz: '/business/b2b/partners', internal: '/internal/eod' };
 
 const PAGE_LABELS = {
-  'partner-management': 'Partner Management',
-  'reports-analytics': 'Reports & Analytics',
-  database: 'Database',
-  'calendar-health': 'Calendar Health',
-  alerts: 'Alerts',
-  'partner-preview': 'Partner Preview',
-  'eod-tracker': 'EOD Tracker',
-  'one-thing': 'One Thing',
-  'time-off': 'Time Off',
-  finance: 'Finance',
-  sops: 'SOPs',
-  'team-directory': 'Team Directory',
-  settings: 'Settings',
-  overview: 'Overview',
+  '/business/b2b/partners': 'Partner Management',
+  '/business/b2b/reports': 'Reports & Analytics',
+  '/business/b2b/database': 'Database',
+  '/business/b2b/calendar-health': 'Calendar Health',
+  '/business/b2b/alerts': 'Alerts',
+  '/business/b2b/partner-preview': 'Partner Preview',
+  '/internal/eod': 'EOD Tracker',
+  '/internal/one-thing': 'One Thing',
+  '/internal/time-off': 'Time Off',
+  '/internal/finance': 'Finance',
+  '/internal/sops': 'SOPs',
+  '/internal/alerts': 'Alerts',
+  '/internal/settings': 'Settings',
+  '/internal/team-directory': 'Team Directory',
 };
 
 export default function MainLayout({ user }) {
-  const [activePortal, setActivePortal] = useState('biz');
-  const [activePage, setActivePage] = useState(DEFAULT_PAGE.biz);
+  const location = useLocation();
+  const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [addTrigger, setAddTrigger] = useState(0);
   const [partners, setPartners] = useState([]);
 
+  const activePortal = location.pathname.startsWith('/internal') ? 'internal' : 'biz';
+  const pageLabel =
+    PAGE_LABELS[location.pathname] ?? (location.pathname.startsWith('/business/b2c') ? 'B2C Clients' : 'Overview');
+
   function handlePortalChange(portal) {
-    setActivePortal(portal);
-    setActivePage(DEFAULT_PAGE[portal]);
     setSearch('');
+    navigate(DEFAULT_PATH[portal] ?? '/');
   }
 
   const counts = {
@@ -43,67 +47,59 @@ export default function MainLayout({ user }) {
 
   return (
     <div style={{ display: 'flex' }}>
-      <Sidebar
-        activePortal={activePortal}
-        onPortalChange={handlePortalChange}
-        activePage={activePage}
-        onPageChange={setActivePage}
-        counts={counts}
-        user={user}
-      />
+      <Sidebar activePortal={activePortal} onPortalChange={handlePortalChange} counts={counts} user={user} />
 
       <div style={{ flex: 1, minWidth: 0 }}>
         <TopBar
           activePortal={activePortal}
-          pageLabel={PAGE_LABELS[activePage] ?? activePage}
+          pageLabel={pageLabel}
           search={search}
           onSearchChange={setSearch}
           primaryAction={
-            activePortal === 'biz' && activePage === 'partner-management'
+            location.pathname === '/business/b2b/partners'
               ? { label: '+ Add Partner', onClick: () => setAddTrigger((n) => n + 1) }
               : null
           }
         />
 
         <main style={{ padding: '2rem' }}>
-          {activePortal === 'biz' && activePage === 'partner-management' && (
-            <PartnerDashboard search={search} addTrigger={addTrigger} onPartnersChange={setPartners} />
-          )}
-
-          {activePortal === 'biz' && activePage !== 'partner-management' && (
-            <PortalPlaceholder
-              icon="🚧"
-              title={PAGE_LABELS[activePage] ?? activePage}
-              subtitle="This section is coming soon."
-              accentColor="#f0c85a"
+          <Routes>
+            <Route path="/" element={<Navigate to="/business/b2b/partners" replace />} />
+            <Route
+              path="/business/b2b/partners"
+              element={<PartnerDashboard search={search} addTrigger={addTrigger} onPartnersChange={setPartners} />}
             />
-          )}
-
-          {activePortal === 'internal' && (
-            <PortalPlaceholder
-              icon="🗂️"
-              title="CLX Internal"
-              subtitle="Team operations hub — daily ops, company resources, and admin tools."
-              accentColor="#5a9fd4"
-              chips={[
-                { key: 'eod-tracker', label: 'EOD Tracker' },
-                { key: 'one-thing', label: 'One Thing' },
-                { key: 'finance', label: 'Finance' },
-                { key: 'sops', label: 'SOPs' },
-              ]}
-              onChipClick={setActivePage}
+            <Route
+              path="/business/b2b/reports"
+              element={<PlaceholderPage title="Reports & Analytics" accentColor="#f0c85a" />}
             />
-          )}
-
-          {activePortal === 'ai' && (
-            <PortalPlaceholder
-              icon="✨"
-              title="CLX AI"
-              subtitle="Tools & automations are on the way."
-              accentColor="#c084fc"
-              chips={[]}
+            <Route path="/business/b2b/database" element={<PlaceholderPage title="Database" accentColor="#f0c85a" />} />
+            <Route
+              path="/business/b2b/calendar-health"
+              element={<PlaceholderPage title="Calendar Health" accentColor="#f0c85a" />}
             />
-          )}
+            <Route path="/business/b2b/alerts" element={<PlaceholderPage title="Alerts" accentColor="#f0c85a" />} />
+            <Route
+              path="/business/b2b/partner-preview"
+              element={<PlaceholderPage title="Partner Preview" accentColor="#f0c85a" />}
+            />
+            <Route
+              path="/business/b2c/*"
+              element={<PlaceholderPage title="B2C Clients" subtitle="Coming soon — TBD" accentColor="#c084fc" />}
+            />
+            <Route path="/internal/eod" element={<PlaceholderPage title="EOD Tracker" accentColor="#5a9fd4" />} />
+            <Route path="/internal/one-thing" element={<PlaceholderPage title="One Thing" accentColor="#5a9fd4" />} />
+            <Route path="/internal/time-off" element={<PlaceholderPage title="Time Off" accentColor="#5a9fd4" />} />
+            <Route path="/internal/finance" element={<PlaceholderPage title="Finance" accentColor="#5a9fd4" />} />
+            <Route path="/internal/sops" element={<PlaceholderPage title="SOPs" accentColor="#5a9fd4" />} />
+            <Route path="/internal/alerts" element={<PlaceholderPage title="Alerts" accentColor="#5a9fd4" />} />
+            <Route path="/internal/settings" element={<PlaceholderPage title="Settings" accentColor="#5a9fd4" />} />
+            <Route
+              path="/internal/team-directory"
+              element={<PlaceholderPage title="Team Directory" accentColor="#5a9fd4" />}
+            />
+            <Route path="*" element={<Navigate to="/business/b2b/partners" replace />} />
+          </Routes>
         </main>
       </div>
     </div>

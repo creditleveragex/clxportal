@@ -1,9 +1,13 @@
+import { Link, useLocation } from 'react-router-dom';
+
 const ACTIVE_STYLES = {
   biz: { background: '#1a2c10', color: '#c8e060' },
   internal: { background: '#0d2035', color: '#5a9fd4' },
 };
 
-export default function NavSection({ dotColor, labelColor, label, tag, items, activePage, onSelect, theme }) {
+export default function NavSection({ dotColor, labelColor, label, tag, items, theme }) {
+  const location = useLocation();
+
   return (
     <div style={{ padding: '0.9rem 0.75rem 0.4rem' }}>
       <div
@@ -35,29 +39,26 @@ export default function NavSection({ dotColor, labelColor, label, tag, items, ac
       </div>
 
       {items.map((item) => {
-        const isActive = activePage === item.key;
+        const isActive = location.pathname === item.path;
         const activeStyle = ACTIVE_STYLES[theme] ?? ACTIVE_STYLES.biz;
 
-        return (
-          <button
-            key={item.key}
-            disabled={item.disabled}
-            onClick={() => !item.disabled && onSelect(item.key)}
-            className={item.disabled ? '' : 'clx-nav-item'}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              textAlign: 'left',
-              background: isActive ? activeStyle.background : 'transparent',
-              color: item.disabled ? '#8b9bb4' : isActive ? activeStyle.color : '#b8c4d4',
-              fontStyle: item.disabled ? 'italic' : 'normal',
-              opacity: item.disabled ? 0.35 : 1,
-              padding: '0.55rem 0.45rem',
-              fontSize: '0.82rem',
-              marginBottom: '0.1rem',
-            }}
-          >
+        const sharedStyle = {
+          display: 'flex',
+          alignItems: 'center',
+          width: '100%',
+          textAlign: 'left',
+          textDecoration: 'none',
+          background: isActive ? activeStyle.background : 'transparent',
+          color: item.disabled ? '#8b9bb4' : isActive ? activeStyle.color : '#b8c4d4',
+          fontStyle: item.disabled ? 'italic' : 'normal',
+          opacity: item.disabled ? 0.35 : 1,
+          padding: '0.55rem 0.45rem',
+          fontSize: '0.82rem',
+          marginBottom: '0.1rem',
+        };
+
+        const content = (
+          <>
             <span style={{ flex: 1 }}>{item.label}</span>
             {item.badge != null && (
               <span
@@ -74,7 +75,21 @@ export default function NavSection({ dotColor, labelColor, label, tag, items, ac
                 {item.badge}
               </span>
             )}
-          </button>
+          </>
+        );
+
+        if (item.disabled) {
+          return (
+            <div key={item.path} style={sharedStyle}>
+              {content}
+            </div>
+          );
+        }
+
+        return (
+          <Link key={item.path} to={item.path} className="clx-nav-item" style={sharedStyle}>
+            {content}
+          </Link>
         );
       })}
     </div>
