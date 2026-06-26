@@ -27,7 +27,9 @@ export default function PartnerDashboard({ search: externalSearch, addTrigger, o
   const filteredPartners = useMemo(() => {
     const term = search.trim().toLowerCase();
     return partners.filter((p) => {
-      const matchesFilter = filter === 'all' || p.health_status === filter;
+      const matchesFilter =
+        filter === 'all' ||
+        (filter === 'flagged' ? p.flagged_for_review : p.health_status === filter);
       const matchesSearch =
         !term ||
         [p.business_name, p.first_name, p.last_name, p.email]
@@ -62,13 +64,7 @@ export default function PartnerDashboard({ search: externalSearch, addTrigger, o
         <StatCard label="Flagged" value={counts.flagged} color="var(--clx-accent)" />
       </div>
 
-      <PartnerFilterBar
-        activeFilter={filter}
-        onFilterChange={setFilter}
-        search={search}
-        onSearchChange={setSearch}
-        onAddNew={() => setEditingPartner(null)}
-      />
+      <PartnerFilterBar activeFilter={filter} onFilterChange={setFilter} resultCount={filteredPartners.length} />
 
       {error && <div style={{ color: 'var(--clx-churned)', marginBottom: '1rem' }}>{error}</div>}
 

@@ -3,9 +3,10 @@ const FILTERS = [
   { value: 'active', label: 'Active' },
   { value: 'at-risk', label: 'At Risk' },
   { value: 'churned', label: 'Churned' },
+  { value: 'flagged', label: 'Flagged' },
 ];
 
-export default function PartnerFilterBar({ activeFilter, onFilterChange, search, onSearchChange, onAddNew }) {
+export default function PartnerFilterBar({ activeFilter, onFilterChange, resultCount }) {
   return (
     <div
       style={{
@@ -35,25 +36,8 @@ export default function PartnerFilterBar({ activeFilter, onFilterChange, search,
         ))}
       </div>
 
-      <div style={{ display: 'flex', gap: '0.75rem' }}>
-        <input
-          placeholder="Search partners..."
-          value={search}
-          onChange={(e) => onSearchChange(e.target.value)}
-          style={{ minWidth: '220px' }}
-        />
-        <button
-          onClick={onAddNew}
-          style={{
-            background: 'var(--clx-accent)',
-            color: 'var(--clx-bg)',
-            padding: '0.5rem 1.25rem',
-            fontWeight: 700,
-            fontSize: '0.85rem',
-          }}
-        >
-          + Add Partner
-        </button>
+      <div style={{ color: 'var(--clx-text-secondary)', fontSize: '0.85rem' }}>
+        {resultCount} {resultCount === 1 ? 'partner' : 'partners'}
       </div>
     </div>
   );
