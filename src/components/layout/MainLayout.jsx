@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation, useNavigate } from 'react-router-
 import Sidebar from './Sidebar.jsx';
 import TopBar from './TopBar.jsx';
 import PartnerDashboard from '../../pages/PartnerDashboard.jsx';
+import PartnerDetailPage from '../../pages/PartnerDetailPage.jsx';
 import PlaceholderPage from '../../pages/PlaceholderPage.jsx';
 import { useUserRole } from '../../hooks/useUserRole.js';
 
@@ -95,6 +96,7 @@ export default function MainLayout({ user }) {
               path="/business/b2b/partners"
               element={<PartnerDashboard search={search} addTrigger={addTrigger} onPartnersChange={setPartners} />}
             />
+            <Route path="/business/b2b/partners/:id" element={<PartnerDetailPage />} />
             <Route
               path="/business/b2b/reports"
               element={<PlaceholderPage title="Reports & Analytics" accentColor="#f0c85a" />}
