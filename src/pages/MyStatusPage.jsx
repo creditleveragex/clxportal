@@ -1,20 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { supabase } from '../supabaseClient.js';
 import HealthBadge from '../components/HealthBadge.jsx';
 import {
   Card,
   Field,
-  CalendarStatusBadge,
   CalendarHealthCard,
   BookingStatsCard,
   LeadsTable,
   computeBookingStats,
 } from '../components/PartnerDetailShared.jsx';
 
-export default function PartnerDetailPage() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+export default function MyStatusPage() {
   const [partner, setPartner] = useState(null);
   const [calendarHealth, setCalendarHealth] = useState(null);
   const [bookings, setBookings] = useState([]);
@@ -27,11 +23,21 @@ export default function PartnerDetailPage() {
     setError(null);
 
     async function load() {
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+
+      if (!active) return;
+
+      if (userError || !userData?.user?.email) {
+        setError(userError?.message || 'Unable to load your session.');
+        setLoading(false);
+        return;
+      }
+
       const { data: ownerData, error: ownerError } = await supabase
         .from('b2b_owners')
         .select('*')
-        .eq('id', id)
-        .single();
+        .eq('email', userData.user.email)
+        .maybeSingle();
 
       if (!active) return;
 
@@ -41,9 +47,9 @@ export default function PartnerDetailPage() {
         return;
       }
 
-      setPartner(ownerData);
+      setPartner(ownerData ?? null);
 
-      if (!ownerData.calendar_name) {
+      if (!ownerData?.calendar_name) {
         setCalendarHealth(null);
         setBookings([]);
         setLoading(false);
@@ -75,62 +81,35 @@ export default function PartnerDetailPage() {
     return () => {
       active = false;
     };
-  }, [id]);
+  }, []);
 
   if (loading) {
-    return <div style={{ color: 'var(--clx-text-secondary)' }}>Loading partner...</div>;
+    return <div style={{ color: 'var(--clx-text-secondary)' }}>Loading your status...</div>;
   }
 
-  if (error || !partner) {
-    return <div style={{ color: 'var(--clx-churned)' }}>{error || 'Partner not found.'}</div>;
+  if (error) {
+    return <div style={{ color: 'var(--clx-churned)' }}>{error}</div>;
+  }
+
+  if (!partner) {
+    return (
+      <div style={{ color: 'var(--clx-text-secondary)' }}>
+        Your account isn't set up yet. Contact your CLX admin.
+      </div>
+    );
   }
 
   const stats = computeBookingStats(bookings);
 
   return (
     <div>
-      <button
-        onClick={() => navigate('/business/b2b/partners')}
-        style={{
-          background: 'transparent',
-          color: 'var(--clx-text-secondary)',
-          border: '1px solid var(--clx-border)',
-          padding: '0.35rem 0.75rem',
-          fontSize: '0.8rem',
-          marginBottom: '1.5rem',
-        }}
-      >
-        ← Back to Partners
-      </button>
-
       <div style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <h2 style={{ fontSize: '1.4rem', color: 'var(--clx-text-secondary)', margin: 0 }}>
-            {partner.business_name || 'PARTNER DETAIL'}
+            {partner.business_name || 'MY STATUS'}
           </h2>
           <HealthBadge status={partner.health_status} />
-          {calendarHealth?.status && <CalendarStatusBadge status={calendarHealth.status} label="Calendar" />}
-          {partner.flagged_for_review && (
-            <span
-              style={{
-                display: 'inline-block',
-                padding: '0.2rem 0.6rem',
-                border: '1px solid var(--clx-churned)',
-                color: 'var(--clx-churned)',
-                fontSize: '0.75rem',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Flagged
-            </span>
-          )}
         </div>
-        {partner.flagged_for_review && partner.flag_reason && (
-          <div style={{ color: 'var(--clx-text-secondary)', fontSize: '0.85rem', marginTop: '0.4rem' }}>
-            {partner.flag_reason}
-          </div>
-        )}
       </div>
 
       <div
@@ -141,9 +120,9 @@ export default function PartnerDetailPage() {
           marginBottom: '2rem',
         }}
       >
-        <ContactCard partner={partner} />
+        <MyAccountCard partner={partner} />
         <CalendarHealthCard calendarHealth={calendarHealth} />
-        <BookingStatsCard stats={stats} />
+        <BookingStatsCard stats={stats} title="My Booking Stats" />
       </div>
 
       <LeadsTable bookings={bookings} />
@@ -151,26 +130,26 @@ export default function PartnerDetailPage() {
   );
 }
 
-function ContactCard({ partner }) {
+function MyAccountCard({ partner }) {
   const name = [partner.first_name, partner.last_name].filter(Boolean).join(' ') || '—';
   const bookingLink = partner.booking_link;
   const truncatedLink = bookingLink && bookingLink.length > 35 ? `${bookingLink.slice(0, 35)}…` : bookingLink;
 
   return (
-    <Card title="Contact">
-      <Field label="Name" value={name} />
+    <Card title="My Account">
+      <div style={{ marginBottom: '0.75rem' }}>
+        <div style={{ fontSize: '1.1rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--clx-text)' }}>
+          {partner.business_name || '—'}
+        </div>
+      </div>
+      <Field label="Contact" value={name} />
       <Field label="Email" value={partner.email || '—'} />
       <Field label="Phone" value={partner.phone || '—'} />
       <Field
         label="Booking Link"
         value={
           bookingLink ? (
-            <a
-              href={bookingLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: 'var(--clx-accent)' }}
-            >
+            <a href={bookingLink} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--clx-accent)' }}>
               {truncatedLink}
             </a>
           ) : (

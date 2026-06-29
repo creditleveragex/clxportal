@@ -4,6 +4,7 @@ import Sidebar from './Sidebar.jsx';
 import TopBar from './TopBar.jsx';
 import PartnerDashboard from '../../pages/PartnerDashboard.jsx';
 import PartnerDetailPage from '../../pages/PartnerDetailPage.jsx';
+import MyStatusPage from '../../pages/MyStatusPage.jsx';
 import PlaceholderPage from '../../pages/PlaceholderPage.jsx';
 import { useUserRole } from '../../hooks/useUserRole.js';
 
@@ -111,10 +112,7 @@ export default function MainLayout({ user }) {
               path="/business/b2b/partner-preview"
               element={<PlaceholderPage title="Partner Preview" accentColor="#f0c85a" />}
             />
-            <Route
-              path="/business/b2b/my-status"
-              element={<PlaceholderPage title="My Status" accentColor="#f0c85a" />}
-            />
+            <Route path="/business/b2b/my-status" element={<MyStatusPage />} />
             <Route
               path="/business/b2b/my-commissions"
               element={<PlaceholderPage title="My Commissions" accentColor="#f0c85a" />}
