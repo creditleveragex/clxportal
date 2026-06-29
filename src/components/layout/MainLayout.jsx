@@ -4,6 +4,7 @@ import Sidebar from './Sidebar.jsx';
 import TopBar from './TopBar.jsx';
 import PartnerDashboard from '../../pages/PartnerDashboard.jsx';
 import PartnerDetailPage from '../../pages/PartnerDetailPage.jsx';
+import MyStatusPage from '../../pages/MyStatusPage.jsx';
 import PlaceholderPage from '../../pages/PlaceholderPage.jsx';
 import { useUserRole } from '../../hooks/useUserRole.js';
 
@@ -39,7 +40,7 @@ const PAGE_LABELS = {
 export default function MainLayout({ user }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAdmin, isPartner } = useUserRole();
+  const { isAdmin, isPartner, loading: roleLoading } = useUserRole();
   const [search, setSearch] = useState('');
   const [addTrigger, setAddTrigger] = useState(0);
   const [partners, setPartners] = useState([]);
@@ -58,8 +59,21 @@ export default function MainLayout({ user }) {
     flagged: partners.filter((p) => p.flagged_for_review).length,
   };
 
+  if (roleLoading) {
+    return <div style={{ padding: '2rem', color: 'var(--clx-text-secondary)' }}>Loading...</div>;
+  }
+
+  const defaultPath = isPartner ? '/business/b2b/my-status' : '/business/b2b/partners';
+
   const isBlockedForPartner =
-    isPartner && (location.pathname.startsWith('/internal') || ADMIN_ONLY_B2B_PATHS.includes(location.pathname));
+    isPartner &&
+    (location.pathname.startsWith('/internal') ||
+      ADMIN_ONLY_B2B_PATHS.includes(location.pathname) ||
+      location.pathname.startsWith('/business/b2b/partners'));
+
+  if (import.meta.env.DEV) {
+    console.log('[MainLayout] role check', { isPartner, isAdmin, path: location.pathname, isBlockedForPartner });
+  }
 
   if (isBlockedForPartner) {
     return <Navigate to="/business/b2b/my-status" replace />;
@@ -91,7 +105,7 @@ export default function MainLayout({ user }) {
 
         <main style={{ padding: '2rem' }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/business/b2b/partners" replace />} />
+            <Route path="/" element={<Navigate to={defaultPath} replace />} />
             <Route
               path="/business/b2b/partners"
               element={<PartnerDashboard search={search} addTrigger={addTrigger} onPartnersChange={setPartners} />}
@@ -111,10 +125,7 @@ export default function MainLayout({ user }) {
               path="/business/b2b/partner-preview"
               element={<PlaceholderPage title="Partner Preview" accentColor="#f0c85a" />}
             />
-            <Route
-              path="/business/b2b/my-status"
-              element={<PlaceholderPage title="My Status" accentColor="#f0c85a" />}
-            />
+            <Route path="/business/b2b/my-status" element={<MyStatusPage />} />
             <Route
               path="/business/b2b/my-commissions"
               element={<PlaceholderPage title="My Commissions" accentColor="#f0c85a" />}
@@ -138,7 +149,7 @@ export default function MainLayout({ user }) {
               path="/internal/team-directory"
               element={<PlaceholderPage title="Team Directory" accentColor="#5a9fd4" />}
             />
-            <Route path="*" element={<Navigate to="/business/b2b/partners" replace />} />
+            <Route path="*" element={<Navigate to={defaultPath} replace />} />
           </Routes>
         </main>
       </div>

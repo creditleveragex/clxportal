@@ -3,6 +3,7 @@ import { supabase } from '../supabaseClient.js';
 
 export function useUserRole() {
   const [role, setRole] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function getRole() {
@@ -14,6 +15,7 @@ export function useUserRole() {
       const { data: { user } } = await supabase.auth.getUser();
       const r = user?.user_metadata?.role ?? 'partner';
       setRole(r);
+      setLoading(false);
     }
     getRole();
   }, []);
@@ -22,5 +24,6 @@ export function useUserRole() {
     role,
     isAdmin: role === 'clx_admin',
     isPartner: role === 'partner',
+    loading,
   };
 }
