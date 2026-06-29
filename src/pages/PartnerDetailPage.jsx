@@ -42,16 +42,23 @@ export default function PartnerDetailPage() {
 
       setPartner(ownerData);
 
+      if (!ownerData.calendar_name) {
+        setCalendarHealth(null);
+        setBookings([]);
+        setLoading(false);
+        return;
+      }
+
       const [{ data: healthData }, { data: bookingData }] = await Promise.all([
         supabase
           .from('b2b_calendar_health')
           .select('*')
-          .eq('calendar', ownerData.business_name)
+          .eq('calendar', ownerData.calendar_name)
           .maybeSingle(),
         supabase
           .from('b2b_bookings')
           .select('*')
-          .eq('calendar', ownerData.business_name)
+          .eq('calendar', ownerData.calendar_name)
           .order('date_of_booking', { ascending: false }),
       ]);
 
