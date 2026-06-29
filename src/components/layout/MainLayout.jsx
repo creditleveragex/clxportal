@@ -60,7 +60,10 @@ export default function MainLayout({ user }) {
   };
 
   const isBlockedForPartner =
-    isPartner && (location.pathname.startsWith('/internal') || ADMIN_ONLY_B2B_PATHS.includes(location.pathname));
+    isPartner &&
+    (location.pathname.startsWith('/internal') ||
+      ADMIN_ONLY_B2B_PATHS.includes(location.pathname) ||
+      location.pathname.startsWith('/business/b2b/partners'));
 
   if (isBlockedForPartner) {
     return <Navigate to="/business/b2b/my-status" replace />;
