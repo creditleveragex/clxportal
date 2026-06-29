@@ -104,6 +104,12 @@ export default function MyStatusPage() {
   return (
     <div>
       <div style={{ marginBottom: '1.5rem' }}>
+        <h1 style={{ fontSize: '1.6rem', fontFamily: "'Bebas Neue', sans-serif", color: 'var(--clx-text)', margin: 0 }}>
+          Welcome back, {partner.first_name || 'Partner'}
+        </h1>
+        <div style={{ color: 'var(--clx-text-secondary)', fontSize: '0.9rem', marginBottom: '1rem' }}>
+          {partner.business_name || '—'}
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
           <h2 style={{ fontSize: '1.4rem', color: 'var(--clx-text-secondary)', margin: 0 }}>
             {partner.business_name || 'MY STATUS'}

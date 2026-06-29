@@ -63,6 +63,8 @@ export default function MainLayout({ user }) {
     return <div style={{ padding: '2rem', color: 'var(--clx-text-secondary)' }}>Loading...</div>;
   }
 
+  const defaultPath = isPartner ? '/business/b2b/my-status' : '/business/b2b/partners';
+
   const isBlockedForPartner =
     isPartner &&
     (location.pathname.startsWith('/internal') ||
@@ -103,7 +105,7 @@ export default function MainLayout({ user }) {
 
         <main style={{ padding: '2rem' }}>
           <Routes>
-            <Route path="/" element={<Navigate to="/business/b2b/partners" replace />} />
+            <Route path="/" element={<Navigate to={defaultPath} replace />} />
             <Route
               path="/business/b2b/partners"
               element={<PartnerDashboard search={search} addTrigger={addTrigger} onPartnersChange={setPartners} />}
@@ -147,7 +149,7 @@ export default function MainLayout({ user }) {
               path="/internal/team-directory"
               element={<PlaceholderPage title="Team Directory" accentColor="#5a9fd4" />}
             />
-            <Route path="*" element={<Navigate to="/business/b2b/partners" replace />} />
+            <Route path="*" element={<Navigate to={defaultPath} replace />} />
           </Routes>
         </main>
       </div>
