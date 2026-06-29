@@ -40,7 +40,7 @@ const PAGE_LABELS = {
 export default function MainLayout({ user }) {
   const location = useLocation();
   const navigate = useNavigate();
-  const { isAdmin, isPartner } = useUserRole();
+  const { isAdmin, isPartner, loading: roleLoading } = useUserRole();
   const [search, setSearch] = useState('');
   const [addTrigger, setAddTrigger] = useState(0);
   const [partners, setPartners] = useState([]);
@@ -59,11 +59,19 @@ export default function MainLayout({ user }) {
     flagged: partners.filter((p) => p.flagged_for_review).length,
   };
 
+  if (roleLoading) {
+    return <div style={{ padding: '2rem', color: 'var(--clx-text-secondary)' }}>Loading...</div>;
+  }
+
   const isBlockedForPartner =
     isPartner &&
     (location.pathname.startsWith('/internal') ||
       ADMIN_ONLY_B2B_PATHS.includes(location.pathname) ||
       location.pathname.startsWith('/business/b2b/partners'));
+
+  if (import.meta.env.DEV) {
+    console.log('[MainLayout] role check', { isPartner, isAdmin, path: location.pathname, isBlockedForPartner });
+  }
 
   if (isBlockedForPartner) {
     return <Navigate to="/business/b2b/my-status" replace />;
