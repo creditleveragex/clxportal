@@ -8,6 +8,26 @@
   --clx-at-risk: #e6a23c;
   --clx-churned: #e5484d;
   --clx-border: #2c3e5a;
+
+  --bg-primary: #080c12;
+  --bg-sidebar: #080c12;
+  --bg-surface: #0f1620;
+  --border-color: #1a2330;
+  --text-primary: #e5edf7;
+  --text-secondary: #8b9bb4;
+  --text-muted: #5a6a80;
+  --accent: #d4af37;
+}
+
+[data-theme="light"] {
+  --bg-primary: #f5f7fa;
+  --bg-sidebar: #ffffff;
+  --bg-surface: #ffffff;
+  --border-color: #e2e8f0;
+  --text-primary: #1a2a3a;
+  --text-secondary: #4a6080;
+  --text-muted: #90a8c0;
+  --accent: #4a7a10;
 }
 
 * {

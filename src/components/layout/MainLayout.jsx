@@ -80,7 +80,7 @@ export default function MainLayout({ user }) {
   }
 
   return (
-    <div style={{ display: 'flex' }}>
+    <div style={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
       <Sidebar
         activePortal={activePortal}
         onPortalChange={handlePortalChange}
@@ -90,7 +90,7 @@ export default function MainLayout({ user }) {
         isPartner={isPartner}
       />
 
-      <div style={{ flex: 1, minWidth: 0 }}>
+      <div style={{ flex: 1, minWidth: 0, height: '100vh', overflowY: 'auto' }}>
         <TopBar
           activePortal={activePortal}
           pageLabel={pageLabel}

@@ -49,9 +49,12 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user, is
       style={{
         width: '224px',
         flexShrink: 0,
-        background: '#080c12',
-        borderRight: '1px solid #1a2330',
-        minHeight: '100vh',
+        background: 'var(--bg-sidebar)',
+        borderRight: '1px solid var(--border-color)',
+        height: '100vh',
+        position: 'sticky',
+        top: 0,
+        overflowY: 'auto',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -81,7 +84,7 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user, is
             />
             {isAdmin && (
               <>
-                <div style={{ borderTop: '1px solid #1a2330' }} />
+                <div style={{ borderTop: '1px solid var(--border-color)' }} />
                 <NavSection
                   theme="biz"
                   dotColor="#c084fc"
@@ -104,7 +107,7 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user, is
               label="Daily Ops"
               items={INTERNAL_DAILY_OPS_ITEMS}
             />
-            <div style={{ borderTop: '1px solid #1a2330' }} />
+            <div style={{ borderTop: '1px solid var(--border-color)' }} />
             <NavSection
               theme="internal"
               dotColor="#5a9fd4"
@@ -112,7 +115,7 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user, is
               label="Company"
               items={INTERNAL_COMPANY_ITEMS}
             />
-            <div style={{ borderTop: '1px solid #1a2330' }} />
+            <div style={{ borderTop: '1px solid var(--border-color)' }} />
             <NavSection
               theme="internal"
               dotColor="#5a9fd4"
@@ -151,7 +154,7 @@ function UserFooter({ user }) {
         alignItems: 'center',
         gap: '0.6rem',
         padding: '0.75rem',
-        borderTop: '1px solid #1a2330',
+        borderTop: '1px solid var(--border-color)',
       }}
     >
       <div
@@ -172,15 +175,15 @@ function UserFooter({ user }) {
         {initials || '?'}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ color: '#e5edf7', fontSize: '0.8rem', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div style={{ color: 'var(--text-primary)', fontSize: '0.8rem', lineHeight: 1.2, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
           {name}
         </div>
-        <div style={{ color: '#5a6a80', fontSize: '0.68rem', lineHeight: 1.2 }}>{role}</div>
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.68rem', lineHeight: 1.2 }}>{role}</div>
       </div>
       <button
         onClick={handleSignOut}
         title="Log out"
-        style={{ background: 'transparent', color: '#5a6a80', fontSize: '1rem', padding: '0.2rem' }}
+        style={{ background: 'transparent', color: 'var(--text-muted)', fontSize: '1rem', padding: '0.2rem' }}
       >
         ⏻
       </button>
