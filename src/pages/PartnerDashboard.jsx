@@ -129,7 +129,7 @@ function pageItems(page, total) {
 function Pagination({ page, totalPages, onPageChange, rangeLabel }) {
   const items = pageItems(page, totalPages);
   const cellBase = { width: 28, height: 28, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
-  const btnBase = { ...cellBase, background: 'transparent', border: 'none', fontSize: 11, fontWeight: 600, color: '#4a6a88', cursor: 'pointer' };
+  const btnBase = { ...cellBase, background: 'transparent', border: 'none', fontSize: 11, fontWeight: 600, color: 'var(--text-secondary)', cursor: 'pointer' };
   return (
     <div
       style={{
@@ -137,8 +137,8 @@ function Pagination({ page, totalPages, onPageChange, rangeLabel }) {
         alignItems: 'center',
         gap: 8,
         marginTop: '1rem',
-        background: '#0f1620',
-        border: '1px solid #1a2330',
+        background: 'var(--bg-surface)',
+        border: '1px solid var(--border-color)',
         borderRadius: 8,
         padding: '8px 12px',
       }}
@@ -153,7 +153,7 @@ function Pagination({ page, totalPages, onPageChange, rangeLabel }) {
 
       {items.map((item, i) =>
         item === '...' ? (
-          <div key={`ellipsis-${i}`} style={{ ...cellBase, color: '#2a3f58', fontSize: 11, fontWeight: 600 }}>
+          <div key={`ellipsis-${i}`} style={{ ...cellBase, color: 'var(--text-muted)', fontSize: 11, fontWeight: 600 }}>
             …
           </div>
         ) : (
@@ -178,7 +178,7 @@ function Pagination({ page, totalPages, onPageChange, rangeLabel }) {
         <i className="ti ti-chevron-right" style={{ fontSize: 13 }} />
       </button>
 
-      <div style={{ fontSize: 11, color: '#3a5070', paddingLeft: 8, borderLeft: '1px solid #1a2330' }}>
+      <div style={{ fontSize: 11, color: 'var(--text-muted)', paddingLeft: 8, borderLeft: '1px solid var(--border-color)' }}>
         {rangeLabel}
       </div>
     </div>

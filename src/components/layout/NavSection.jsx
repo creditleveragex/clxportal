@@ -49,7 +49,7 @@ export default function NavSection({ dotColor, labelColor, label, tag, items, th
           textAlign: 'left',
           textDecoration: 'none',
           background: isActive ? activeStyle.background : 'transparent',
-          color: item.disabled ? '#8b9bb4' : isActive ? activeStyle.color : '#b8c4d4',
+          color: item.disabled ? 'var(--text-secondary)' : isActive ? activeStyle.color : undefined,
           fontStyle: item.disabled ? 'italic' : 'normal',
           opacity: item.disabled ? 0.35 : 1,
           padding: '0.55rem 0.45rem',
