@@ -58,7 +58,7 @@ export default function PartnerDashboard({ search: externalSearch, addTrigger, o
   const rangeLabel =
     filteredPartners.length === 0
       ? '0 partners'
-      : `Showing ${start + 1}–${rangeEnd} of ${filteredPartners.length} partner${filteredPartners.length === 1 ? '' : 's'}`;
+      : `${start + 1}–${rangeEnd} of ${filteredPartners.length} partner${filteredPartners.length === 1 ? '' : 's'}`;
 
   const counts = useMemo(
     () => ({
@@ -95,7 +95,7 @@ export default function PartnerDashboard({ search: externalSearch, addTrigger, o
         <>
           <PartnerTable partners={pagedPartners} onEdit={setEditingPartner} onFlag={setFlaggingPartner} />
           {totalPages > 1 && (
-            <Pagination page={safePage} totalPages={totalPages} onPageChange={setPage} />
+            <Pagination page={safePage} totalPages={totalPages} onPageChange={setPage} rangeLabel={rangeLabel} />
           )}
         </>
       )}
@@ -126,53 +126,43 @@ function pageItems(page, total) {
   return [1, '...', page - 1, page, page + 1, '...', total];
 }
 
-function Pagination({ page, totalPages, onPageChange }) {
+function Pagination({ page, totalPages, onPageChange, rangeLabel }) {
   const items = pageItems(page, totalPages);
-  const btnBase = {
-    background: 'transparent',
-    border: '1px solid var(--clx-border)',
-    color: 'var(--clx-text)',
-    padding: '0.3rem 0.6rem',
-    fontSize: '0.8rem',
-    cursor: 'pointer',
-    lineHeight: 1,
-  };
+  const cellBase = { width: 28, height: 28, borderRadius: 5, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 };
+  const btnBase = { ...cellBase, background: 'transparent', border: 'none', fontSize: 11, fontWeight: 600, color: '#4a6a88', cursor: 'pointer' };
   return (
     <div
       style={{
         display: 'flex',
         alignItems: 'center',
-        gap: '0.35rem',
+        gap: 8,
         marginTop: '1rem',
-        borderTop: '1px solid var(--clx-border)',
-        paddingTop: '0.75rem',
+        background: '#0f1620',
+        border: '1px solid #1a2330',
+        borderRadius: 8,
+        padding: '8px 12px',
       }}
     >
       <button
         onClick={() => onPageChange(page - 1)}
         disabled={page === 1}
-        style={{ ...btnBase, opacity: page === 1 ? 0.35 : 1 }}
+        style={{ ...btnBase, opacity: page === 1 ? 0.3 : 1, cursor: page === 1 ? 'default' : 'pointer' }}
       >
-        <i className="ti ti-chevron-left" />
+        <i className="ti ti-chevron-left" style={{ fontSize: 13 }} />
       </button>
 
       {items.map((item, i) =>
         item === '...' ? (
-          <span
-            key={`ellipsis-${i}`}
-            style={{ color: 'var(--clx-text-secondary)', padding: '0 0.25rem', fontSize: '0.8rem' }}
-          >
+          <div key={`ellipsis-${i}`} style={{ ...cellBase, color: '#2a3f58', fontSize: 11, fontWeight: 600 }}>
             …
-          </span>
+          </div>
         ) : (
           <button
             key={item}
             onClick={() => onPageChange(item)}
             style={{
               ...btnBase,
-              ...(item === page
-                ? { background: '#c8e060', color: '#0a0f1a', borderColor: '#c8e060', fontWeight: 700 }
-                : {}),
+              ...(item === page ? { background: '#c8e060', color: '#0a1400', fontWeight: 700 } : {}),
             }}
           >
             {item}
@@ -183,14 +173,14 @@ function Pagination({ page, totalPages, onPageChange }) {
       <button
         onClick={() => onPageChange(page + 1)}
         disabled={page === totalPages}
-        style={{ ...btnBase, opacity: page === totalPages ? 0.35 : 1 }}
+        style={{ ...btnBase, opacity: page === totalPages ? 0.3 : 1, cursor: page === totalPages ? 'default' : 'pointer' }}
       >
-        <i className="ti ti-chevron-right" />
+        <i className="ti ti-chevron-right" style={{ fontSize: 13 }} />
       </button>
 
-      <span style={{ color: 'var(--clx-text-secondary)', fontSize: '0.8rem', marginLeft: '0.5rem' }}>
-        Page {page} of {totalPages}
-      </span>
+      <div style={{ fontSize: 11, color: '#3a5070', paddingLeft: 8, borderLeft: '1px solid #1a2330' }}>
+        {rangeLabel}
+      </div>
     </div>
   );
 }
