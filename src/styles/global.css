@@ -28,6 +28,13 @@
   --text-secondary: #4a6080;
   --text-muted: #90a8c0;
   --accent: #4a7a10;
+
+  /* Override --clx-* vars so content components respond to the theme */
+  --clx-bg: #f0f4fa;
+  --clx-surface: #ffffff;
+  --clx-text: #1a2a3a;
+  --clx-text-secondary: #4a6080;
+  --clx-border: #e2e8f0;
 }
 
 * {
@@ -84,7 +91,20 @@ a {
   color: var(--clx-accent);
 }
 
+.clx-nav-item {
+  color: #b8c4d4;
+}
+
 .clx-nav-item:hover {
   background: #0f1928 !important;
   color: #b0cce0 !important;
+}
+
+[data-theme="light"] .clx-nav-item {
+  color: #4a5a70;
+}
+
+[data-theme="light"] .clx-nav-item:hover {
+  background: #f0f9e0 !important;
+  color: #4a7a10 !important;
 }
