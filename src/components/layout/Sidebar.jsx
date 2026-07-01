@@ -56,6 +56,10 @@ export default function Sidebar({ activePortal, onPortalChange, counts, user, is
         flexDirection: 'column',
       }}
     >
+      <div style={{ padding: '1rem 0.75rem 0' }}>
+        <img src="/clx-logo-dark.png" alt="Credit Leverage X" style={{ width: '148px', height: 'auto', display: 'block' }} />
+      </div>
+
       <PortalDropdown
         activePortal={activePortal}
         onSelect={onPortalChange}
