@@ -63,21 +63,23 @@ export default function TopBar({ activePortal, pageLabel, search, onSearchChange
         )}
         <button
           onClick={() => setTheme((t) => (t === 'light' ? 'dark' : 'light'))}
-          title={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(255,255,255,0.08)'; }}
+          onMouseLeave={(e) => { e.currentTarget.style.background = 'transparent'; }}
           style={{
             background: 'transparent',
-            border: '1px solid var(--border-color)',
-            color: 'var(--text-secondary)',
-            width: 32,
-            height: 32,
+            border: 'none',
+            cursor: 'pointer',
+            padding: '6px',
+            borderRadius: '6px',
+            color: theme === 'dark' ? '#f0c85a' : '#4a6080',
+            fontSize: '18px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            flexShrink: 0,
-            cursor: 'pointer',
           }}
         >
-          <i className={`ti ti-${theme === 'light' ? 'moon' : 'sun'}`} style={{ fontSize: 15 }} />
+          <i className={theme === 'dark' ? 'ti ti-sun' : 'ti ti-moon'} />
         </button>
       </div>
     </div>
