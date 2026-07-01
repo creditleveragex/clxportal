@@ -37,7 +37,7 @@ export default function PartnerFilterBar({ activeFilter, onFilterChange, resultC
       </div>
 
       <div style={{ color: 'var(--clx-text-secondary)', fontSize: '0.85rem' }}>
-        {resultCount} {resultCount === 1 ? 'partner' : 'partners'}
+        {resultCount}
       </div>
     </div>
   );
